@@ -12,7 +12,7 @@ export class User {
     @Column({ length: 255, unique: true })
     email: string;
 
-    @Column({ select: false })
+    @Column()
     @Exclude()
     password: string;
 

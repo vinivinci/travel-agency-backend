@@ -13,6 +13,7 @@ export const AppDataSource = new DataSource({
     password: process.env.DB_PASSWORD,
     database: process.env.DATABASE,
     entities: [User, TravelPackage, Booking, Image],
+    synchronize: true,
 });
 
 

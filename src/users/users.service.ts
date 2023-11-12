@@ -63,12 +63,14 @@ export class UsersService {
         return this.userRepository.findOneBy({ email });
     }
 
-    async validateUser(email: string, pass: string): Promise<boolean> {
+    async validateUser(email: string, pass: string): Promise<Partial<User> | null> {
         const user = await this.findByEmail(email);
-        if (user) {
-            const isMatch = await bcrypt.compare(pass, user.password);
-            return isMatch;
+        const match = await bcrypt.compare(pass, user.password);
+        if (match) {
+            const { password, ...result } = user;
+            return result;
         }
-        return false;
+        return null;
     }
+
 }

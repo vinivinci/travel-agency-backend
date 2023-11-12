@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Image } from '../../images/entities/image.entity';
 @Entity('TravelPackages')
 export class TravelPackage {
     @PrimaryGeneratedColumn('increment')
@@ -22,4 +22,7 @@ export class TravelPackage {
 
     @Column('numeric', { precision: 10, scale: 2 })
     price: number;
+
+    @OneToMany(() => Image, image => image.image)
+    images: Image[];
 }
