@@ -16,6 +16,4 @@ export class User {
     @Exclude()
     password: string;
 
-    @Column('text')
-    contactInfo: string;
 }

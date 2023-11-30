@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, HttpStatus, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, HttpStatus, HttpException, Query } from '@nestjs/common';
 import { TravelPackagesService } from './travel-packages.service';
 import { TravelPackageDTO } from './travel-package.dto';
 
@@ -47,5 +47,20 @@ export class TravelPackagesController {
         } catch (error) {
             throw new HttpException(error.message, HttpStatus.NOT_FOUND);
         }
+    }
+
+    @Get('search/query')
+    async findByQuery(
+        @Query('destination') destination: string,
+        @Query('startDate') startDate: Date,
+        @Query('endDate') endDate: Date
+    ) {
+        console.log(destination)
+        const travelPackages = await this.travelPackagesService.findByQuery({ destination, startDate, endDate });
+
+        if (!travelPackages.length) {
+            throw new HttpException(`Pacotes de viagens para ${destination} não encontrados.`, HttpStatus.NOT_FOUND);
+        }
+        return travelPackages;
     }
 }

@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { TravelPackage } from './entities/travel-package.entity';
 import { Image } from '../images/entities/image.entity';
 import { TravelPackageDTO } from './travel-package.dto';
+import { QueryTravelPackageDTO } from './query-travel-package.dto';
 
 @Injectable()
 export class TravelPackagesService {
@@ -47,6 +48,31 @@ export class TravelPackagesService {
         return this.travelPackageRepository.findOne({ where: { packageID: id }, relations: ['images'] });
     }
 
+    async findByQuery(query: QueryTravelPackageDTO): Promise<TravelPackage[]> {
+        const queryBuilder = this.travelPackageRepository
+            .createQueryBuilder('travelPackage')
+            .leftJoinAndSelect('travelPackage.images', 'images');
+
+        if (query.destination) {
+            queryBuilder.andWhere('LOWER(travelPackage.destination) LIKE LOWER(:destination)', {
+                destination: `%${query.destination}%`
+            });
+        }
+
+        if (query.startDate) {
+            queryBuilder.andWhere('travelPackage.startDate < :startDate', {
+                startDate: query.startDate
+            });
+        }
+
+        if (query.endDate) {
+            queryBuilder.andWhere('travelPackage.endDate > :endDate', {
+                endDate: query.endDate
+            });
+        }
+
+        return queryBuilder.getMany();
+    }
 
     async updatePackage(id: number, dto: TravelPackageDTO): Promise<TravelPackage> {
         const travelPackage = await this.travelPackageRepository.findOne({ where: { packageID: id }, relations: ['images'] });

@@ -20,5 +20,5 @@ export class TravelPackageDTO {
     price: number;
 
     @IsOptional()
-    images?: Buffer[];
+    images?: String[];
 }

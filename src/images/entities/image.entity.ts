@@ -1,13 +1,13 @@
 import { TravelPackage } from 'src/travel-packages/entities/travel-package.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity('Images')
 export class Image {
     @PrimaryGeneratedColumn('increment')
     imageID: number;
 
-    @Column('bytea')
-    image: Buffer;
+    @Column('text')
+    image: String;
 
     @Column('text', { nullable: true })
     description: string;
@@ -16,5 +16,6 @@ export class Image {
     createdAt: Date;
 
     @ManyToOne(() => TravelPackage, travelPackage => travelPackage.images)
+    @JoinColumn({ name: 'packageID' })
     package: TravelPackage;
 }
